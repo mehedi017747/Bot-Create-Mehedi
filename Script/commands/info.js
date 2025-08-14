@@ -62,10 +62,10 @@ module.exports.run = async function ({ api, event, args, Users, permssion, getTe
  ];
  var link = [
  "https://i.postimg.cc/QdgH08j6/Messenger-creation-C2-A39-DCF-A8-E7-4-FC7-8715-2559476-FEEF4.gif",
- "https://i.imgur.com/WXQIgMz.jpeg",
+ "https://i.imgur.com/HBhrsGP.jpeg",
  "https://i.postimg.cc/QdgH08j6/Messenger-creation-C2-A39-DCF-A8-E7-4-FC7-8715-2559476-FEEF4.gif",
- "https://i.imgur.com/WXQIgMz.jpeg",
- "https://i.imgur.com/WXQIgMz.jpeg",
+ "https://i.imgur.com/HBhrsGP.jpeg",
+ "https://i.imgur.com/HBhrsGP.jpeg",
  ];
 
  var i = 1;
