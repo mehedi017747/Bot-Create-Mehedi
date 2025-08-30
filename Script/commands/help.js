@@ -1,26 +1,33 @@
 module.exports.config = {
-        name: "help",
-        version: "1.0.2",
-        hasPermssion: 0,
-        credits: "𝐂𝐘𝐁𝐄𝐑 ☢️_𖣘 -𝐁𝐎𝐓 ⚠️ 𝑻𝑬𝑨𝑴_ ☢️",
-        description: "FREE SET-UP MESSENGER",
-        commandCategory: "system",
-        usages: "[Name module]",
-        cooldowns: 5,
-        envConfig: {
-                autoUnsend: true,
-                delayUnsend: 20
-        }
+ name: "help",
+ version: "1.0.4",
+ hasPermssion: 0,
+ credits: "𝐒𝐡𝐚𝐡𝐚𝐝𝐚𝐭 𝐈𝐬𝐥𝐚𝐦",
+ description: "Shows all commands with details",
+ commandCategory: "system",
+ usages: "[command name/page number]",
+ cooldowns: 5,
+ envConfig: {
+ autoUnsend: true,
+ delayUnsend: 20
+ }
 };
 
 module.exports.languages = {
  "en": {
-    "moduleInfo": "╭──────•◈•──────╮\n |        𝗜𝘀𝗹𝗮𝗺𝗶𝗰𝗸 𝗰𝗵𝗮𝘁 𝗯𝗼𝘁\n |●𝗡𝗮𝗺𝗲: •—» %1 «—•\n |●𝗨𝘀𝗮𝗴𝗲: %3\n |●𝗗𝗲𝘀𝗰𝗿𝗶p𝘁𝗶𝗼𝗻: %2\n |●𝗖𝗮𝘁𝗲𝗴𝗼𝗿𝘆: %4\n |●𝗪𝗮𝗶𝘁𝗶𝗻𝗴 𝘁𝗶𝗺𝗲: %5 seconds(s)\n |●𝗣𝗲𝗿𝗺𝗶𝘀𝘀𝗶𝗼𝗻: %6\n |𝗠𝗼𝗱𝘂𝗹𝗲 𝗰𝗼𝗱𝗲 𝗯𝘆\n |•—» Ullash ッ «—•\n╰──────•◈•──────╯",
-    "helpList": '[ There are %1 commands on this bot, Use: "%2help nameCommand" to know how to use! ]',
-    "user": "User",
-        "adminGroup": "Admin group",
-        "adminBot": "Admin bot"
-  }
+ "moduleInfo": `
+
+
+╭━━━━━━━━━━━━━━━━╮\n┃ ✨ 𝐂𝐎𝐌𝐌𝐀𝐍𝐃 𝐃𝐄𝐓𝐀𝐈𝐋𝐒 ✨\n┣━━━━━━━━━━━┫\n┃ 🔖 Name: %1\n┃ 📄 Page: %2/%3\n┃ 🧮 Total: %4\n┣━━━━━━━━━━━━━━━━┫\n%5\n┣━━━━━━━━━━━━━━━━┫\n┃ ⚙ Prefix: %6\n┃ 🤖 Bot Name: ─꯭─⃝‌‌❝𝐂𝐲𝐛𝐞𝐫 𝐁𝐨𝐭 𝐌𝐞𝐡𝐞𝐝𝐢❞\n┃ 👑 Owner: ❝𝐌𝐞𝐡𝐞𝐝𝐢 𝐀𝐡𝐚𝐦𝐞𝐝❞\n╰━━━━━━━━━━━━━━━━╯
+
+
+
+`,
+ "helpList": "[ There are %1 commands. Use: \"%2help commandName\" to view more. ]",
+ "user": "User",
+ "adminGroup": "Admin Group",
+ "adminBot": "Admin Bot"
+ }
 };
 
 module.exports.handleEvent = function ({ api, event, getText }) {
@@ -30,95 +37,68 @@ module.exports.handleEvent = function ({ api, event, getText }) {
  if (!body || typeof body == "undefined" || body.indexOf("help") != 0) return;
  const splitBody = body.slice(body.indexOf("help")).trim().split(/\s+/);
  if (splitBody.length == 1 || !commands.has(splitBody[1].toLowerCase())) return;
+
  const threadSetting = global.data.threadData.get(parseInt(threadID)) || {};
  const command = commands.get(splitBody[1].toLowerCase());
  const prefix = (threadSetting.hasOwnProperty("PREFIX")) ? threadSetting.PREFIX : global.config.PREFIX;
- return api.sendMessage(getText("moduleInfo", command.config.name, command.config.description, `${prefix}${command.config.name} ${(command.config.usages) ? command.config.usages : ""}`, command.config.commandCategory, command.config.cooldowns, ((command.config.hasPermssion == 0) ? getText("user") : (command.config.hasPermssion == 1) ? getText("adminGroup") : getText("adminBot")), command.config.credits), threadID, messageID);
-}
+ const totalCommands = commands.size;
+ const page = 1;
 
-module.exports. run = function({ api, event, args, getText }) {
-  const axios = require("axios");
-  const request = require('request');
-  const fs = require("fs-extra");
+ let commandList = "";
+ commands.forEach((cmd) => {
+ if (cmd.config && cmd.config.name && cmd.config.description) {
+ commandList += `┃ ✪ ${cmd.config.name} - ${cmd.config.description}\n`;
+ }
+ });
+
+ return api.sendMessage(getText("moduleInfo", command.config.name, page, Math.ceil(totalCommands / 10), totalCommands, commandList, prefix), threadID, messageID);
+};
+
+module.exports.run = function ({ api, event, args, getText }) {
+ const request = require("request");
+ const fs = require("fs-extra");
  const { commands } = global.client;
  const { threadID, messageID } = event;
  const command = commands.get((args[0] || "").toLowerCase());
  const threadSetting = global.data.threadData.get(parseInt(threadID)) || {};
  const { autoUnsend, delayUnsend } = global.configModule[this.config.name];
  const prefix = (threadSetting.hasOwnProperty("PREFIX")) ? threadSetting.PREFIX : global.config.PREFIX;
-if (args[0] == "all") {
-    const command = commands.values();
-    var group = [], msg = "";
-    for (const commandConfig of command) {
-      if (!group.some(item => item.group.toLowerCase() == commandConfig.config.commandCategory.toLowerCase())) group.push({ group: commandConfig.config.commandCategory.toLowerCase(), cmds: [commandConfig.config.name] });
-      else group.find(item => item.group.toLowerCase() == commandConfig.config.commandCategory.toLowerCase()).cmds.push(commandConfig.config.name);
-    }
-    group.forEach(commandGroup => msg += `❄️ ${commandGroup.group.charAt(0).toUpperCase() + commandGroup.group.slice(1)} \n${commandGroup.cmds.join(' • ')}\n\n`);
 
-    return axios.get('https://loidsenpaihelpapi.miraiandgoat.repl.co').then(res => {
-    let ext = res.data.data.substring(res.data.data.lastIndexOf(".") + 1);
-      let admID = "61551846081032";
-
-      api.getUserInfo(parseInt(admID), (err, data) => {
-      if(err){ return console.log(err)}
-     var obj = Object.keys(data);
-    var firstname = data[obj].name.replace("@", "");
-    let callback = function () {
-        api.sendMessage({ body:`✿🄲🄾🄼🄼🄰🄽🄳 🄻🄸🅂🅃✿\n\n` + msg + `✿══════════════✿\n│𝗨𝘀𝗲 ${prefix}help [Name?]\n│𝗨𝘀𝗲 ${prefix}help [Page?]\n│𝗡𝗔𝗠𝗘 𝗢𝗪𝗡𝗘𝗥 : │Ullash ッ\n│𝗧𝗢𝗧𝗔𝗟 :  ${commands.size}\n————————————`, mentions: [{
-                           tag: firstname,
-                           id: admID,
-                           fromIndex: 0,
-                 }],
-            attachment: fs.createReadStream(__dirname + `/cache/472.${ext}`)
-        }, event.threadID, (err, info) => {
-        fs.unlinkSync(__dirname + `/cache/472.${ext}`);
-        if (autoUnsend == false) {
-            setTimeout(() => {
-                return api.unsendMessage(info.messageID);
-            }, delayUnsend * 1000);
-        }
-        else return;
-    }, event.messageID);
-        }
-         request(res.data.data).pipe(fs.createWriteStream(__dirname + `/cache/472.${ext}`)).on("close", callback);
-     })
-      })
-};
  if (!command) {
-  const arrayInfo = [];
-  const page = parseInt(args[0]) || 1;
-    const numberOfOnePage = 15;
-    let i = 0;
-    let msg = "";
+ const arrayInfo = [];
+ const page = parseInt(args[0]) || 1;
+ const numberOfOnePage = 20;
+ let msg = "";
 
-    for (var [name, value] of (commands)) {
-      name += ``;
-      arrayInfo.push(name);
-    }
-
-    arrayInfo.sort((a, b) => a.data - b.data);  
-const first = numberOfOnePage * page - numberOfOnePage;
-   i = first;
-   const helpView = arrayInfo.slice(first, first + numberOfOnePage);
-
-
-   for (let cmds of helpView) msg += `•—»[ ${cmds} ]«—•\n`;
-    const siu = `╭──────•◈•──────╮\n |        𝗜𝘀𝗹𝗮𝗺𝗶𝗰𝗸 𝗰𝗵𝗮𝘁 𝗯𝗼𝘁 \n |   🄲🄾🄼🄼🄰🄽🄳 🄻🄸🅂🅃       \n╰──────•◈•──────╯`;
-const text = `╭──────•◈•──────╮\n│𝗨𝘀𝗲 ${prefix}help [Name?]\n│𝗨𝘀𝗲 ${prefix}help [Page?]\n│𝗡𝗔𝗠𝗘 𝗢𝗪𝗡𝗘𝗥 : │ Ullash ッ\n│𝗧𝗢𝗧𝗔𝗟 : [${arrayInfo.length}]\n│📛🄿🄰🄶🄴📛 :  [${page}/${Math.ceil(arrayInfo.length/numberOfOnePage)}]\n╰──────•◈•──────╯`; 
-    var link = [
-"https://i.imgur.com/HPaSlBu.jpeg", "https://i.imgur.com/HPaSlBu.jpeg", "https://i.imgur.com/WXQIgMz.jpeg", "https://i.postimg.cc/QdgH08j6/Messenger-creation-C2-A39-DCF-A8-E7-4-FC7-8715-2559476-FEEF4.gif",
-"https://i.imgur.com/WXQIgMz.jpeg",
-"https://i.imgur.com/ybM9Wtr.jpeg",
-"https://i.imgur.com/HPaSlBu.jpeg",
-    ]
-     var callback = () => api.sendMessage({ body: siu + "\n\n" + msg  + text, attachment: fs.createReadStream(__dirname + "/cache/loidbutter.jpg")}, event.threadID, () => fs.unlinkSync(__dirname + "/cache/loidbutter.jpg"), event.messageID);
-    return request(encodeURI(link[Math.floor(Math.random() * link.length)])).pipe(fs.createWriteStream(__dirname + "/cache/loidbutter.jpg")).on("close", () => callback());
+ for (var [name] of commands) {
+ if (name && name.trim() !== "") arrayInfo.push(name.trim());
  }
-const leiamname = getText("moduleInfo", command.config.name, command.config.description, `${(command.config.usages) ? command.config.usages : ""}`, command.config.commandCategory, command.config.cooldowns, ((command.config.hasPermssion == 0) ? getText("user") : (command.config.hasPermssion == 1) ? getText("adminGroup") : getText("adminBot")), command.config.credits);
+ arrayInfo.sort();
 
-  var link = [
-"https://i.postimg.cc/QdgH08j6/Messenger-creation-C2-A39-DCF-A8-E7-4-FC7-8715-2559476-FEEF4.gif",
-  ]
-    var callback = () => api.sendMessage({ body: leiamname, attachment: fs.createReadStream(__dirname + "/cache/loidbutter.jpg")}, event.threadID, () => fs.unlinkSync(__dirname + "/cache/loidbutter.jpg"), event.messageID);
-return request(encodeURI(link[Math.floor(Math.random() * link.length)])).pipe(fs.createWriteStream(__dirname + "/cache/loidbutter.jpg")).on("close", () => callback());
+ const totalPages = Math.ceil(arrayInfo.length / numberOfOnePage);
+ const start = numberOfOnePage * (page - 1);
+ const helpView = arrayInfo.slice(start, start + numberOfOnePage);
+
+ for (let cmdName of helpView) {
+ if (cmdName && cmdName.trim() !== "") {
+ msg += `┃ ✪ ${cmdName}\n`;
+ }
+ }
+
+ const text = `
+
+
+╭━━━━━━━━━━━━━━━━╮\n┃ 📜 𝐂𝐎𝐌𝐌𝐀𝐍𝐃 𝐋𝐈𝐒𝐓 📜\n┣━━━━━━━━━━━━━━━┫\n┃ 📄 Page: ${page}/${totalPages}\n┃ 🧮 Total: ${arrayInfo.length}\n┣━━━━━━━━━━━━━━━━┫\n${msg}┣━━━━━━━━━━━━━━━━┫\n┃ ⚙ Prefix: ${prefix}\n┃ 🤖 Bot Name: ─꯭─⃝‌‌❝𝐂𝐲𝐛𝐞𝐫 𝐁𝐨𝐭 𝐌𝐞𝐡𝐞𝐝𝐢❞\n┃ 👑 Owner Name: ❝𝐌𝐞𝐡𝐞𝐝𝐢 𝐀𝐡𝐚𝐦𝐞𝐝❞\n╰━━━━━━━━━━━━━━━━╯
+
+`;
+
+ const imgPath = __dirname + "/cache/helppic.jpg";
+ const callback = () => api.sendMessage({ body: text, attachment: fs.createReadStream(imgPath) }, threadID, () => fs.unlinkSync(imgPath), messageID);
+ return request("https://i.imgur.com/6eMnhJg.jpeg").pipe(fs.createWriteStream(imgPath)).on("close", () => callback());
+ }
+
+ const detail = getText("moduleInfo", command.config.name, "1", "1", "1", `┃ ✪ ${command.config.name} - ${command.config.description}`, prefix);
+ const imgPath = __dirname + "/cache/helppic.jpg";
+ const callback = () => api.sendMessage({ body: detail, attachment: fs.createReadStream(imgPath) }, threadID, () => fs.unlinkSync(imgPath), messageID);
+ return request("https://i.imgur.com/6eMnhJg.jpeg").pipe(fs.createWriteStream(imgPath)).on("close", () => callback());
 };
