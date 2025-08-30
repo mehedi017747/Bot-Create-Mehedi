@@ -1,83 +1,128 @@
 module.exports.config = {
-	name: "pending",
-	version: "1.0.5",
-	credits: "MAHBUB SHAON",
-	hasPermssion: 2,
-	description: "Manage bot's waiting messages",
-	commandCategory: "system",
-	cooldowns: 5
+  name: "pending",
+  version: "1.0.6",
+  credits: "𝐒𝐡𝐚𝐡𝐚𝐝𝐚𝐭 𝐈𝐬𝐥𝐚𝐦",
+  hasPermssion: 2,
+  description: "Manage bot's pending group requests",
+  commandCategory: "system",
+  cooldowns: 5
 };
 
 module.exports.languages = {
- "vi": {
- "invaildNumber": "%1 không phải là một con số hợp lệ",
- "cancelSuccess": "Đã từ chối thành công %1 nhóm!",
- "notiBox": "Box của bạn đã được admin phê duyệt để có thể sử dụng bot",
- "approveSuccess": "Đã phê duyệt thành công %1 nhóm!",
+  "en": {
+    "invaildNumber": "❌ %1 is not a valid number",
+    "cancelSuccess": "✅ Successfully rejected %1 group(s)!",
+    "notiBox1": "চ্ঁলে্ঁ এ্ঁসে্ঁছি্ঁ ۵𝐂𝐘𝐁𝐄𝐑 𝐁𝐎𝐓 𝐌𝐄𝐇𝐄𝐃𝐈۵ এঁখঁনঁ তোঁমাঁদেঁরঁ সাঁথেঁ আঁড্ডাঁ দিঁবঁ..!😘",
+    "notiBox2": `╭•┄┅═══❁🌺❁═══┅┄•╮
+     আ্ঁস্ঁসা্ঁলা্ঁমু্ঁ💚আ্ঁলা্ঁই্ঁকু্ঁম্ঁ
+╰•┄┅═══❁🌺❁═══┅┄•╯
 
- "cantGetPendingList": "Không thể lấy danh sách các nhóm đang chờ!",
- "returnListPending": "「PENDING」❮ Tổng số nhóm cần duyệt: %1 nhóm ❯\n\n%2",
- "returnListClean": "「PENDING」Hiện tại không có nhóm nào trong hàng chờ"
- },
- "en": {
- "invaildNumber": "%1 is not an invalid number",
- "cancelSuccess": "Refused %1 thread!",
- "notiBox": "𝐂𝐘𝐁𝐄𝐑 ☢️_𖣘 -𝐁𝐎𝐓 × • 𝗜𝘀𝗹𝗮𝗺𝗶𝗰𝗸 𝗰𝗵𝗮𝘁 𝗯𝗼𝘁 | ᵁᴸᴸ⁴ˢᴴ Connected Successfully!\nUse /help for more info :>",
- "approveSuccess": "Approved successfully %1 threads!",
+𝐓𝐡𝐚𝐧𝐤 𝐲𝐨𝐮 𝐬𝐨 𝐦𝐮𝐜𝐡 𝐟𝐨𝐫 𝐚𝐝𝐝𝐢𝐧𝐠 𝐦𝐞 𝐭𝐨 𝐲𝐨𝐮𝐫 𝐠𝐫𝐨𝐮𝐩! 🖤🤗
+𝐈 𝐰𝐢𝐥𝐥 𝐚𝐥𝐰𝐚𝐲𝐬 𝐒𝐞𝐫𝐯𝐢𝐜𝐞 𝐲𝐨𝐮 𝐈𝐧 𝐒𝐡𝐚 𝐀𝐥𝐥𝐚𝐡 🌺❤️
 
- "cantGetPendingList": "Can't get the pending list!",
- "returnListPending": "»「PENDING」«❮ The whole number of threads to approve is: %1 thread ❯\n\n%2",
- "returnListClean": "「PENDING」There is no thread in the pending list"
- }
-}
+𝐂𝐨𝐦𝐦𝐚𝐧𝐝 𝐋𝐢𝐬𝐭:
+${global.config.PREFIX}help
+${global.config.PREFIX}info
+${global.config.PREFIX}admin
+
+★ For any help or complaints, please contact admin ★
+➤𝐌𝐞𝐬𝐬𝐞𝐧𝐠𝐞𝐫: https://www.facebook.com/100035088489972
+➤𝐖𝐡𝐚𝐭𝐬𝐀𝐩𝐩: 01603566588
+
+❖⋆═══════════════════════⋆❖
+      𝐁𝐨𝐭 𝐎𝐰𝐧𝐞𝐫 ➢ ❝𝐌𝐞𝐡𝐞𝐝𝐢 𝐀𝐡𝐚𝐦𝐞𝐝❞`,
+    "approveSuccess": "✅ Successfully approved %1 group(s)!",
+    "cantGetPendingList": "❌ Failed to retrieve pending list!",
+    "returnListPending": "📝 𝗣𝗘𝗡𝗗𝗜𝗡𝗚 𝗟𝗜𝗦𝗧\n\nTotal groups awaiting approval: %1\n\n%2\n\nReply with the number(s) to approve or 'c' followed by number(s) to reject (e.g., 1 2 3 or c1 c2)",
+    "returnListClean": "✅ There are no pending groups at the moment."
+  }
+};
 
 module.exports.handleReply = async function({ api, event, handleReply, getText }) {
- if (String(event.senderID) !== String(handleReply.author)) return;
- const { body, threadID, messageID } = event;
- var count = 0;
+  if (String(event.senderID) !== String(handleReply.author)) return;
+  
+  const { body, threadID, messageID } = event;
+  let count = 0;
 
- if (isNaN(body) && body.indexOf("c") == 0 || body.indexOf("cancel") == 0) {
- const index = (body.slice(1, body.length)).split(/\s+/);
- for (const singleIndex of index) {
- console.log(singleIndex);
- if (isNaN(singleIndex) || singleIndex <= 0 || singleIndex > handleReply.pending.length) return api.sendMessage(getText("invaildNumber", singleIndex), threadID, messageID);
- api.removeUserFromGroup(api.getCurrentUserID(), handleReply.pending[singleIndex - 1].threadID);
- count+=1;
- }
- return api.sendMessage(getText("cancelSuccess", count), threadID, messageID);
- }
- else {
- const index = body.split(/\s+/);
- for (const singleIndex of index) {
- if (isNaN(singleIndex) || singleIndex <= 0 || singleIndex > handleReply.pending.length) return api.sendMessage(getText("invaildNumber", singleIndex), threadID, messageID);
- api.sendMessage(getText("notiBox"), handleReply.pending[singleIndex - 1].threadID);
- count+=1;
- }
- return api.sendMessage(getText("approveSuccess", count), threadID, messageID);
- }
-}
+  
+  if ((isNaN(body) && body.toLowerCase().startsWith("c")) || body.toLowerCase().startsWith("cancel")) {
+    const indexes = body.match(/\d+/g) || [];
+    
+    for (const num of indexes) {
+      const index = parseInt(num);
+      if (isNaN(index) || index <= 0 || index > handleReply.pending.length) {
+        return api.sendMessage(getText("invaildNumber", num), threadID, messageID);
+      }
+      
+      try {
+        await api.removeUserFromGroup(api.getCurrentUserID(), handleReply.pending[index - 1].threadID);
+        count++;
+      } catch (e) {
+        console.error("Error rejecting group:", e);
+      }
+    }
+    return api.sendMessage(getText("cancelSuccess", count), threadID, messageID);
+  } 
+  
+  else {
+    const indexes = body.match(/\d+/g) || [];
+    
+    for (const num of indexes) {
+      const index = parseInt(num);
+      if (isNaN(index) || index <= 0 || index > handleReply.pending.length) {
+        return api.sendMessage(getText("invaildNumber", num), threadID, messageID);
+      }
+      
+      try {
+        const groupID = handleReply.pending[index - 1].threadID;
+        await api.sendMessage(getText("notiBox1"), groupID);
+        await api.sendMessage(getText("notiBox2"), groupID);
+        count++;
+      } catch (e) {
+        console.error("Error approving group:", e);
+      }
+    }
+    return api.sendMessage(getText("approveSuccess", count), threadID, messageID);
+  }
+};
 
 module.exports.run = async function({ api, event, getText }) {
-	const { threadID, messageID } = event;
- const commandName = this.config.name;
- var msg = "", index = 1;
-
- try {
-		var spam = await api.getThreadList(100, null, ["OTHER"]) || [];
-		var pending = await api.getThreadList(100, null, ["PENDING"]) || [];
-	} catch (e) { return api.sendMessage(getText("cantGetPendingList"), threadID, messageID) }
-
-	const list = [...spam, ...pending].filter(group => group.isSubscribed && group.isGroup);
-
- for (const single of list) msg += `${index++}/ ${single.name}(${single.threadID})\n`;
-
- if (list.length != 0) return api.sendMessage(getText("returnListPending", list.length, msg), threadID, (error, info) => {
-		global.client.handleReply.push({
- name: commandName,
- messageID: info.messageID,
- author: event.senderID,
- pending: list
- })
-	}, messageID);
- else return api.sendMessage(getText("returnListClean"), threadID, messageID);
-}
+  const { threadID, messageID } = event;
+  
+  try {
+    const [spam, pending] = await Promise.all([
+      api.getThreadList(100, null, ["OTHER"]),
+      api.getThreadList(100, null, ["PENDING"])
+    ]);
+    
+    const list = [...(spam || []), ...(pending || [])]
+      .filter(group => group.isSubscribed && group.isGroup);
+    
+    if (list.length === 0) {
+      return api.sendMessage(getText("returnListClean"), threadID, messageID);
+    }
+    
+    const msg = list.map((group, index) => 
+      `${index + 1}. ${group.name || 'Unnamed Group'} (ID: ${group.threadID})`
+    ).join('\n');
+    
+    return api.sendMessage(
+      getText("returnListPending", list.length, msg), 
+      threadID,
+      (error, info) => {
+        if (!error) {
+          global.client.handleReply.push({
+            name: this.config.name,
+            messageID: info.messageID,
+            author: event.senderID,
+            pending: list
+          });
+        }
+      },
+      messageID
+    );
+  } catch (e) {
+    console.error(e);
+    return api.sendMessage(getText("cantGetPendingList"), threadID, messageID);
+  }
+};
