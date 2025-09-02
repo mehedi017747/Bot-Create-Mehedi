@@ -1,11 +1,11 @@
 {
   "name": "ISLAMICK BOT",
-  "version": "10.1.1",
+  "version": "5.0.0",
   "description": "made by 𝐂𝐘𝐁𝐄𝐑 ☢️_𖣘 -𝐁𝐎𝐓 ⚠️ 𝑻𝑬𝑨𝑴_☢️",
   "main": "Cyber.js",
   "engines": {
-      "node": "20.x",
-      "npm": "10.0.0"
+    "node": ">=20.18.1",
+    "npm": ">=10.0.0 <13.0.0"
   },
   "scripts": {
       "start": "node Ullash.js",
@@ -25,7 +25,9 @@
       "ullash",
       "cyberullash",
       "cyberRajib ",
-      "islamick chat bot"
+      "islamick chat bot",
+      "grandpa academy",
+      "cyberbot.top"
   ],
   "author": "Ullash ッ",
   "license": "GPL-3.0",
@@ -51,6 +53,7 @@
       "colors": "^1.4.0",
       "content-disposition": "^0.5.4",
       "cron": "^2.1.0",
+      "cyber-fca": "^2.0.0",
       "crypto": "^1.0.1",
       "crypto-js": "^4.1.1",
       "discord-chatbot": "^2.1.0",
@@ -60,7 +63,6 @@
       "express": "^4.19.2",
       "extract-zip": "^2.0.1",
       "fb-tools": "0.0.1-security",
-      "fca-priyansh": "^18.0.0",
       "figlet": "^1.5.2",
       "form-data": "^4.0.0",
       "fs-extra": "^10.1.0",
@@ -96,7 +98,6 @@
       "ping-monitor": "^0.6.2",
       "priyansh-fb-downloader": "^2.0.0",
       "priyansh-ig-downloader": "^2.0.2",
-      "priyanshu-fca": "^1.0.0",
       "random-cat-img": "^1.0.4",
       "readline": "^1.3.0",
       "request": "^2.88.2",
